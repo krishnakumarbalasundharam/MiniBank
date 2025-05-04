@@ -1,7 +1,5 @@
 package MiniBank;
 
-
-
 public class BankingSystem {
 
 public BankingSystem(String ownerNm, String acNo, double initialBalance) {
@@ -52,7 +50,7 @@ public void withdraw(double amount) {
 	else {
 		balance-=amount;
 		System.out.println("Amount Withdrawn: "+amount);
-		System.out.println("remaining Balance: "+ balance);
+		System.out.println("remaining Balance: "+ getBalance());
 	}
 }
 public double getBalance() {
@@ -64,13 +62,6 @@ public void getDetails() {
 	System.out.println("Balance Available: "+ getBalance());
 }
 
-public static void main(String[] args) {
-	BankingSystem banking = new BankingSystem("Aravind", "87866643", 1000);
-	banking.withdraw(300);
-	banking.deposit(500);
-	banking.getDetails();
-	
-	
-}
+
 
 }
