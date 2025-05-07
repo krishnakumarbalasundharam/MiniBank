@@ -8,47 +8,57 @@ public class BankInterface {
 		Scanner scanner = new Scanner(System.in);
 		BankingSystem bankingSystem = null;
 		int option;
+		
+		System.out.println("GO AHEAD\n1.Create Account\n2.Login\n3.Exit");
+		option = scanner.nextInt();
 		do {
-		System.out.println("Select a Service: \n1.Create Account\n2.Deposit\n3.Withdraw"
-				+ "\n4.View details\n5.Exit");
-		 option= scanner.nextInt();
-		switch (option) {
+		switch(option) {
 		case 1: {
+			System.out.println("Create your Account");
 			System.out.println("Enter your name: ");
 			String name=scanner.next();
 			
-			System.out.println("Enter Account no.");
-			String acNo=scanner.next();
-			
+			long acNo = AccountNumberGenerator.generateAcNo();		
+			System.out.println("Set Pin");
+			int pin=scanner.nextInt();
 			System.out.println("Deposit Initial Amount");
 			int depAmount = scanner.nextInt();
-			 bankingSystem= new BankingSystem(name, acNo, depAmount);
-			 System.out.println("Account Successfully created");
+			 bankingSystem= new BankingSystem(name, acNo , pin , depAmount);
+			 AccountDBService.saveBankAccount(bankingSystem);
+			 System.out.println("Your Account num: "+acNo);
+			 
 			break;
 		}
 		case 2:{
-			System.out.println("Enter Amount to Deposit");
-			Double dep=scanner.nextDouble();
-			bankingSystem.deposit(dep);
+			System.out.println("Login:");
+			System.out.print("Enter account Number: ");
+			long acNo = scanner.nextLong();		
+			System.out.println();
+			System.out.println("Enter Pin");
+			int pin=scanner.nextInt();
+			
+			if(pin<1000||acNo<1000000000L) {
+				System.out.println("Enter valid Credintials"); 
+			}else {
+			BankingSystem loggedInUserBankingSystem= AccountDBService.login(acNo, pin);
+			if(loggedInUserBankingSystem!=null) {
+				System.out.println("Login Successful");
+				loggedInUserBankingSystem.loggedIn();
+				return;
+			}
+			else {
+				System.out.println("Invalid Accoount number or pin");
+				break;
+			}
+			}
 			break;
 		}
-		case 3:{
-			System.out.println("Enter Amount to withdraw");
-			Double with=scanner.nextDouble();
-			bankingSystem.withdraw(with);
+		case 3:
 			break;
-		}
-		case 4:{
-			bankingSystem.getDetails();
-			break;
-		}
-		case 5:{
-			break;
-		}
 		default:
 			throw new IllegalArgumentException("Unexpected value: " + option);
-		}
-		
-		}while(option!=5);
+		}}while(option!=3);
+		scanner.close();
 	}
+	
 }
